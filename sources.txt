@@ -1,0 +1,15 @@
+45F 13D:
+
+com\shuihu\demo/ Main.java
+com\shuihu\demo\ai/ AiController.java BattleContext.java RuleBasedHeroAi.java SimpleMinionAi.java
+com\shuihu\demo\engine/ BattleManager.java CombatResolver.java EnvironmentManager.java TurnManager.java
+com\shuihu\demo\event/ AfterAttackEvent.java AfterDamageEvent.java BattleEndEvent.java BattleStartEvent.java BeforeDamageEvent.java BossSummonEvent.java EventBus.java GameEvent.java PhaseTransitionEvent.java StatusAppliedEvent.java TurnEndEvent.java TurnStartEvent.java
+com\shuihu\demo\factory/ MockDataFactory.java
+com\shuihu\demo\model/ Formula.java
+com\shuihu\demo\model\entity/ Enemy.java Entity.java Player.java SummonedEntity.java
+com\shuihu\demo\model\item/ Inventory.java Item.java
+com\shuihu\demo\model\skill/ DamageType.java EffectType.java Skill.java SkillEffect.java SkillType.java
+com\shuihu\demo\model\stats/ BattleStats.java StatModifier.java Stats.java
+com\shuihu\demo\model\status/ Status.java StatusManager.java StatusType.java
+com\shuihu\demo\model\talent/ Talent.java TriggerCondition.java
+com\shuihu\demo\model\weapon/ Weapon.java WeaponEffectHandler.java WeaponType.java
