@@ -26,6 +26,7 @@ public class TestBattle {
         testDefenseReducesDamage();
         testShieldAbsorbsDamage();
         testBattleDeath();
+        testExpAndGold();
 
         System.out.println("\n========== 结果 ==========");
         System.out.println("通过: " + passed + ", 失败: " + failed);
@@ -147,6 +148,21 @@ public class TestBattle {
             Player p = MockDataFactory.createMockPlayer();
             p.getBattleStats().setCurrentHp(0);
             assertTrue(!p.isAlive(), "HP=0时应死亡");
+        });
+    }
+
+    static void testExpAndGold() {
+        check("经验金币系统", () -> {
+            Player p = MockDataFactory.createMockPlayer();
+            assertEquals(0, p.getGold(), "初始金币为0");
+            assertEquals(0, p.getExp(), "初始经验为0");
+
+            p.addGold(50);
+            assertEquals(50, p.getGold(), "加金币");
+
+            p.addExp(p.getExpToLevelUp());
+            assertTrue(p.getLevel() > 5, "升级后等级提升");
+            assertTrue(p.getBattleStats().getCurrentHp() > 160, "升级后HP上限提高");
         });
     }
 }

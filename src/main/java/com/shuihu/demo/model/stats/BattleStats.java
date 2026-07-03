@@ -60,6 +60,18 @@ public class BattleStats {
     /** 是否存活 */
     public boolean isAlive() { return currentHp > 0; }
 
+    /** 战斗间重置：清理所有临时战斗状态，保留HP/MP */
+    public void resetTempStats() {
+        this.shield = 0;
+        this.atkMultiplier = 1.0;
+        this.defMultiplier = 1.0;
+        this.dmgReduction = 0.0;
+        this.critRate = 0.0;
+        this.dodgeRate = 0.0;
+        this.hitRate = 0.0;
+        this.modifiers.clear();
+    }
+
     // === 属性计算 ===
 
     public double getEffectiveAtk(double baseAtk) {

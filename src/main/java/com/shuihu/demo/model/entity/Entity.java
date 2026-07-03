@@ -40,6 +40,11 @@ public abstract class Entity {
         // 子类可重写
     }
 
+    /** 清空所有状态效果 */
+    public void clearStatus() {
+        this.statusEffects.clear();
+    }
+
     public boolean isAlive() { return battleStats != null && battleStats.isAlive(); }
 
     // === Getter/Setter ===

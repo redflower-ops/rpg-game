@@ -1,6 +1,7 @@
 package com.shuihu.demo.factory;
 
 import com.shuihu.demo.ai.RuleBasedHeroAi;
+import com.shuihu.demo.ai.SimpleMinionAi;
 import com.shuihu.demo.model.entity.Enemy;
 import com.shuihu.demo.model.entity.Player;
 import com.shuihu.demo.model.item.Inventory;
@@ -381,5 +382,35 @@ public class MockDataFactory {
         boss.setAiController(new RuleBasedHeroAi("song_jiang"));
         boss.setOpeningLine("宋江代天行道，尔等受死！");
         return boss;
+    }
+
+    // ========== 关卡小兵 ==========
+
+    /** 根据楼层和缩放系数创建小兵 */
+    public static Enemy createFloorMinion(int floor, double scale) {
+        int baseHp = (int)(80 * scale);
+        int baseMp = (int)(20 * scale);
+        int baseAtk = (int)(15 * scale);
+        int baseDef = (int)(8 * scale);
+        int baseSpd = (int)(8 * scale);
+        int baseMres = (int)(5 * scale);
+
+        String[] names = {"游勇", "庄客", "土兵", "山贼", "草寇"};
+        String[] weapons = {"朴刀", "棍棒", "短剑", "铁叉", "板斧"};
+        int idx = Math.min(floor - 1, names.length - 1);
+
+        Enemy minion = new Enemy();
+        minion.setId("minion_f" + floor);
+        minion.setName(names[idx] + "·" + weapons[idx]);
+        minion.setLevel(1 + floor);
+        minion.setBaseStats(new Stats(baseHp, baseMp, baseAtk, baseDef, baseSpd, baseMres));
+        minion.setBattleStats(new BattleStats(baseHp, baseMp));
+        minion.setSkills(List.of(
+            new Skill("normal_attack", "劈砍", SkillType.NORMAL, 0, 0, 0, DamageType.PHYSICAL,
+                List.of(new SkillEffect(EffectType.DAMAGE, "1.0", 1.0, null)))
+        ));
+        minion.setAiController(new SimpleMinionAi());
+        minion.setOpeningLine("站住！此路不通！");
+        return minion;
     }
 }

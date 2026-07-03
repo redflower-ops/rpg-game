@@ -42,6 +42,13 @@ public class BattleManager {
         this.battleEnded = false;
         this.envManager = new EnvironmentManager();
 
+        // 重置玩家战斗临时状态（保留HP/MP）
+        player.getBattleStats().resetTempStats();
+        StatusManager.clearAll(player);
+        player.setDefending(false);
+        player.setDrinkValue(0);
+        player.setChainPoints(0);
+
         // 发布战斗开始事件
         EventBus.publish(new BattleStartEvent(player, boss));
 
@@ -180,7 +187,6 @@ public class BattleManager {
         Entity target = findTarget();
         if (target == null) return;
 
-        player.getSkills().forEach(Skill::tickCooldown); // 技能只针对非普攻技能冷却
         Skill actualSkill = new Skill(normalAttack.getId(), normalAttack.getName(),
                 normalAttack.getType(), normalAttack.getMpCost(), normalAttack.getHpCost(),
                 normalAttack.getCooldown(), normalAttack.getDamageType(),
@@ -208,14 +214,23 @@ public class BattleManager {
         System.out.println("\n可用技能：");
         for (int i = 0; i < available.size(); i++) {
             Skill s = available.get(i);
-            System.out.printf("%d. %s (MP:%d, 冷却:%d)%n",
-                    i + 1, s.getName(), s.getMpCost(), s.getCooldown());
+            String desc = s.getDescription();
+            System.out.printf("%d. %s (MP:%d, 冷却:%d)%n", i + 1, s.getName(), s.getMpCost(), s.getCooldown());
+            if (desc != null && !desc.isBlank()) {
+                System.out.println("   └ " + desc);
+            }
         }
         System.out.println("0. 返回");
         System.out.print("> ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice;
+        try {
+            choice = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            if (scanner.hasNextLine()) scanner.nextLine();
+            return false;
+        }
         if (choice <= 0 || choice > available.size()) return false;
 
         Skill chosen = available.get(choice - 1);
@@ -241,8 +256,14 @@ public class BattleManager {
         System.out.println("0. 返回");
         System.out.print("> ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice;
+        try {
+            choice = scanner.nextInt();
+            scanner.nextLine();
+        } catch (Exception e) {
+            if (scanner.hasNextLine()) scanner.nextLine();
+            return false;
+        }
         if (choice <= 0 || choice > items.size()) return false;
 
         var item = inv.use(items.get(choice - 1).getId());

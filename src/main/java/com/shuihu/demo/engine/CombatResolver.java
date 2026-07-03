@@ -132,12 +132,18 @@ public class CombatResolver {
         double value = Formula.evaluate(effect.getFormula(), attacker, defender, null);
         double baseAtk = attacker.getBattleStats().getEffectiveAtk(attacker.getBaseStats().getAtk());
 
-        return switch (skill.getDamageType()) {
+        double raw = switch (skill.getDamageType()) {
             case PHYSICAL -> baseAtk * Math.max(value, 0) - defender.getBaseStats().getDef() * 0.5;
             case MAGIC -> baseAtk * Math.max(value, 0) - defender.getBaseStats().getMres() * 0.5;
             case TRUE -> baseAtk * Math.max(value, 0);
             case PERCENT -> defender.getBaseStats().getMaxHp() * Math.max(value, 0);
         };
+
+        // 伤害下限：至少造成10%攻击力的伤害（PERCENT类型除外）
+        if (skill.getDamageType() != DamageType.PERCENT) {
+            raw = Math.max(raw, baseAtk * 0.1);
+        }
+        return raw;
     }
 
     private static double applyModifiers(Entity attacker, Entity defender, double damage, Skill skill, BattleContext context) {
